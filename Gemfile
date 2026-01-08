@@ -18,6 +18,7 @@ gem 'dotenv-rails', '~> 3.2'
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ]
+  gem 'pry-rails', '~> 0.3.11'
   gem 'rspec-rails', '~> 6.1.0'
 end
 

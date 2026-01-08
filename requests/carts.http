@@ -1,0 +1,2 @@
+GET http://localhost:3000/cart
+content-type: application/json

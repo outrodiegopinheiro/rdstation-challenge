@@ -1,6 +1,8 @@
 class CardProductsController < ApplicationController
-  before_action :set_product, only: %i[create]
-  before_action :validate_product, only: %i[create]
+  before_action :set_product, only: %i[create update]
+  before_action :validate_product, only: %i[create update]
+  before_action :set_card_product, only: %i[update]
+  before_action :test_exists_in_cart, only: %i[update]
 
   def create
     cart = current_cart
@@ -15,6 +17,18 @@ class CardProductsController < ApplicationController
     end
   end
 
+  def update
+    if @card_product.update(quantity: card_product_params[:quantity])
+      cart = current_cart
+
+      cart.update_total_price!
+
+      render json: build_cart_response(cart), status: 200
+    else
+      render json: @card_product.errors, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def set_product
@@ -23,6 +37,14 @@ class CardProductsController < ApplicationController
 
   def validate_product
     return render json: { error: 'Product not found' }, status: 404 if @product.blank?
+  end
+
+  def set_card_product
+    @card_product = current_cart.cart_products.find_by(product: @product)
+  end
+
+  def test_exists_in_cart
+    return render json: { error: "The Product don't exists in cart" }, status: 422 if @card_product.blank?
   end
 
   def card_product_params

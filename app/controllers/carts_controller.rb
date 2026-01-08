@@ -2,13 +2,6 @@ class CartsController < ApplicationController
   ## TODO Escreva a lógica dos carrinhos aqui
 
   def index
-    cart = current_cart
-    response = {
-      id: cart.id,
-      products: cart.products,
-      total_price: cart.total_price
-    }
-
-    render json: response
+    render json: build_cart_response(current_cart), status: 200
   end
 end

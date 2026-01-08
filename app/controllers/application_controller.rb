@@ -14,4 +14,12 @@ class ApplicationController < ActionController::API
 
     @current_cart
   end
+
+  def build_cart_response(cart)
+    {
+      id: cart&.id,
+      products: cart&.products,
+      total_price: cart&.total_price
+    }
+  end
 end

@@ -13,4 +13,12 @@ class Cart < ApplicationRecord
         total_price: cart_product.quantity * product.unit_price }
     end
   end
+
+  def update_total_price!
+    prices = cart_products.preload(:product).all.map do |cart_product|
+      cart_product.quantity * cart_product.product.unit_price
+    end
+
+    update(total_price: prices.sum)
+  end
 end

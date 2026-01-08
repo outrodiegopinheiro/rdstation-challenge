@@ -1,8 +1,8 @@
 class CardProductsController < ApplicationController
-  before_action :set_product, only: %i[create update]
-  before_action :validate_product, only: %i[create update]
-  before_action :set_card_product, only: %i[update]
-  before_action :test_exists_in_cart, only: %i[update]
+  before_action :set_product, only: %i[create update destroy]
+  before_action :validate_product, only: %i[create update destroy]
+  before_action :set_card_product, only: %i[update destroy]
+  before_action :test_exists_in_cart, only: %i[update destroy]
 
   def create
     cart = current_cart
@@ -27,6 +27,16 @@ class CardProductsController < ApplicationController
     else
       render json: @card_product.errors, status: :unprocessable_entity
     end
+  end
+
+  def destroy
+    @card_product.destroy!
+
+    cart = current_cart
+
+    cart.update_total_price!
+
+    render json: build_cart_response(cart), status: 200
   end
 
   private

@@ -23,6 +23,6 @@ class Cart < ApplicationRecord
   end
 
   def update_last_interaction_at!
-    update(last_interaction_at: Time.zone.now, status: 'ACTIVE')
+    update(last_interaction_at: Time.zone.now, status: 'ACTIVE', marked_as_abandoned_at: nil)
   end
 end

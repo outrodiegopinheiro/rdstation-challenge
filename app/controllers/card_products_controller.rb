@@ -10,6 +10,7 @@ class CardProductsController < ApplicationController
 
     if @card_product.save
       cart.update_total_price!
+      cart.update_last_interaction_at!
 
       render json: build_cart_response(cart), status: :created
     else
@@ -22,6 +23,7 @@ class CardProductsController < ApplicationController
       cart = current_cart
 
       cart.update_total_price!
+      cart.update_last_interaction_at!
 
       render json: build_cart_response(cart), status: 200
     else
@@ -35,6 +37,7 @@ class CardProductsController < ApplicationController
     cart = current_cart
 
     cart.update_total_price!
+    cart.update_last_interaction_at!
 
     render json: build_cart_response(cart), status: 200
   end

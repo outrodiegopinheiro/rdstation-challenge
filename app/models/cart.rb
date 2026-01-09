@@ -1,9 +1,9 @@
 class Cart < ApplicationRecord
+  enum :status, { 'ACTIVE' => 0, 'ABANDONED' => 1 }.freeze
+
   has_many :cart_products
 
   validates_numericality_of :total_price, greater_than_or_equal_to: 0
-
-  # TODO: lógica para marcar o carrinho como abandonado e remover se abandonado
 
   def products
     cart_products.preload(:product).all.map do |cart_product|
@@ -20,5 +20,9 @@ class Cart < ApplicationRecord
     end
 
     update(total_price: prices.sum)
+  end
+
+  def update_last_interaction_at!
+    update(last_interaction_at: Time.zone.now, status: 'ACTIVE')
   end
 end

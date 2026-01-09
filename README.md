@@ -204,7 +204,7 @@ Copiar o template das variáveis de ambiente:
 cp .env.example .env
 ```
 
-Definir os valores das variáveis de ambiente:
+Se necessário, redefinir os valores das variáveis de ambiente:
 ```bash
 vim .env
 ```

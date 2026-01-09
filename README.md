@@ -126,6 +126,8 @@ Response:
 }
 ```
 
+`OBS: Em minha opinião, esse requisito não ficou bem definido ou ficou confuso. Então a minha implementação foi da forma mais adequada possível. Se necessário, posso fazer a justificativa em alguma reunião.`
+
 ### 3. Remover um produto do carrinho
 
 Criar um endpoint para excluir um produto do do carrinho.

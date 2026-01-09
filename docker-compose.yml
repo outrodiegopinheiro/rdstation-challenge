@@ -1,33 +1,47 @@
 version: '3'
 
 services:
-    db:
-        image: postgres:16-alpine
-        environment:
-          - POSTGRES_USER=postgres
-          - POSTGRES_PASSWORD=password
-        ports:
-            - '5432:5432'
-        volumes:
-            - postgres13:/var/lib/postgresql/data
-    redis:
-        image: redis:7.0.15-alpine
-        ports:
-        - '6379:6379'
-        volumes:
-        - redis_data:/data  
-    web:
-        ## TODO
-    test:
-        build: .
-        command: bundle exec rspec
-        volumes:
-            - .:/rails
-        depends_on:
-            - db
-            - redis 
-        environment:
-            - DATABASE_URL: postgresql://postgres:password@db:5432/myapp_test
-            - REDIS_URL: redis://redis:6379/0
+  db:
+    image: postgres:16-alpine
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/
+      TIME_TO_MARK_AS_ABANDONED_IN_SECONDS: 10800
+      TIME_TO_DESTROY_ABANDONED_CART_IN_DAYS: 7
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres13:/var/lib/postgresql/data
+  redis:
+    image: redis:7.0.15-alpine
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+  web:
+    build:
+      context: .
+    command: bundle exec puma -C config/puma.rb
+    volumes:
+      - .:/rails
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - redis
+    restart: always
+  test:
+    build: .
+    command: bundle exec rspec
+    volumes:
+      - .:/rails
+    depends_on:
+      - db
+      - redis
+    environment:
+      DATABASE_URL: postgresql://postgres:password@db:5432/myapp_test
+      REDIS_URL: redis://redis:6379/0
+      TIME_TO_MARK_AS_ABANDONED_IN_SECONDS: 10800
+      TIME_TO_DESTROY_ABANDONED_CART_IN_DAYS: 7
 volumes:
-    postgres13:
+  postgres13:
+  redis_data:

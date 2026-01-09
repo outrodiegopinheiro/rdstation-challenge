@@ -61,11 +61,6 @@ RSpec.describe "/cart_products", type: :request do
 
   describe "PUT /cart/add_item" do
     context 'when the product already is in the cart' do
-      subject do
-        put '/cart/add_item', params: { product_id: product.id, quantity: 3 }, as: :json
-        put '/cart/add_item', params: { product_id: product.id, quantity: 4 }, as: :json
-      end
-
       it 'updates the quantity of the existing item in the cart' do
         post '/cart', params: valid_attributes, headers: valid_headers, as: :json
 
@@ -80,6 +75,18 @@ RSpec.describe "/cart_products", type: :request do
 
         expect(products.count).to eq(1)
         expect(products.first['quantity']).to eq(4)
+      end
+    end
+
+    context "with invalid parameters" do
+      it "renders a JSON response with errors" do
+        post '/cart', params: valid_attributes, headers: valid_headers, as: :json
+
+        put '/cart/add_item', params: { product_id: product.id, quantity: 3 }, as: :json
+        put '/cart/add_item', params: { product_id: product.id, quantity: 'w' }, as: :json
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.content_type).to match(a_string_including("application/json"))
       end
     end
   end

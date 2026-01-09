@@ -13,7 +13,8 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   post 'cart', to: 'cart_products#create'
-  post 'cart/add_item', to: 'cart_products#update'
+
+  put 'cart/add_item', to: 'cart_products#update'
 
   delete '/cart/:product_id', to: 'cart_products#destroy'
 

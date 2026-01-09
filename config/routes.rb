@@ -3,13 +3,13 @@ require 'sidekiq/web'
 Rails.application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
 
-  resources :carts, only: %i[index] do
+  resources :carts, only: %i[show] do
     resources :card_products, only: %i[create update destroy]
   end
 
   resources :products
 
-  get 'cart', to: 'carts#index'
+  get 'cart', to: 'carts#show'
   get "up" => "rails/health#show", as: :rails_health_check
 
   post 'cart', to: 'card_products#create'

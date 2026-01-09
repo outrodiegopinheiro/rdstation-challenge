@@ -1,4 +1,4 @@
-class CardProductsController < ApplicationController
+class CartProductsController < ApplicationController
   before_action :set_product, only: %i[create update destroy]
   before_action :validate_product, only: %i[create update destroy]
   before_action :set_card_product, only: %i[update destroy]

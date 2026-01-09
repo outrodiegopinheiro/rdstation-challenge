@@ -23,6 +23,22 @@ class Cart < ApplicationRecord
   end
 
   def update_last_interaction_at!
-    update(last_interaction_at: Time.zone.now, status: 'ACTIVE', marked_as_abandoned_at: nil)
+    update(last_interaction_at: Time.zone.now, status: 'ACTIVE')
+  end
+
+  def abandoned?
+    status == 'ABANDONED'
+  end
+
+  def mark_as_abandoned(datetime: Time.zone.now,
+                        delta_time_to_abandon: ENV.fetch("TIME_TO_MARK_AS_ABANDONED_IN_SECONDS", 3 * 60 * 60).to_i.seconds)
+    if last_interaction_at.blank? || (datetime - last_interaction_at) >= delta_time_to_abandon
+      update(status: 'ABANDONED')
+    end
+  end
+
+  def remove_if_abandoned(datetime: Time.zone.now,
+                          delta_days_to_destroy: ENV.fetch("TIME_TO_DESTROY_ABANDONED_CART_IN_DAYS", 7).to_i.days)
+    destroy if status == 'ABANDONED' && (datetime - last_interaction_at) >= delta_days_to_destroy
   end
 end

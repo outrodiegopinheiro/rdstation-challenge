@@ -10,5 +10,5 @@
 :scheduler:
   :schedule:
     mark_cart_as_abandoned:
-      every: 1 minutes
+      every: 5 minutes
       class: MarkCartAsAbandonedJob
